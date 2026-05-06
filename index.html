@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1st Pathfinder Camporee — I Will Attend</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --forest-deep:#0b1f0b;
+  --gold:#c8960c;
+  --gold-bright:#f0b429;
+  --red:#b91c1c;
+  --navy:#0f1f3d;
+  --panel-bg:rgba(11,31,11,0.75);
+  --border:rgba(200,150,12,0.22);
+  --border-h:rgba(240,180,41,0.55);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Crimson Pro',Georgia,serif;
+  background:#0a1a0a;
+  min-height:100vh;color:#fff;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 70% 55% at 15% 8%,rgba(45,122,45,0.16) 0%,transparent 70%),
+    radial-gradient(ellipse 55% 70% at 85% 95%,rgba(200,150,12,0.09) 0%,transparent 70%),
+    repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.035) 2px,rgba(0,0,0,0.035) 4px);
+  pointer-events:none;z-index:0;
+}
+
+/* HEADER */
+.site-header{
+  position:relative;z-index:10;
+  padding:2.4rem 2rem 1.5rem;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(to bottom,rgba(10,26,10,0.98),rgba(10,26,10,0.0));
+}
+@media(max-width:480px){.site-header{padding:1.5rem 1rem 1rem;}}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:'Oswald',sans-serif;
+  font-size:0.66rem;letter-spacing:0.26em;font-weight:400;
+  color:var(--gold-bright);text-transform:uppercase;
+  margin-bottom:0.65rem;
+  padding:4px 16px;
+  border:1px solid rgba(240,180,41,0.28);
+  border-radius:2px;
+}
+.site-header h1{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(2rem,4.2vw,3.4rem);
+  font-weight:900;letter-spacing:0.03em;
+  text-transform:uppercase;line-height:1;color:#fff;
+}
+.site-header h1 em{color:var(--gold-bright);font-style:normal;}
+.site-header p{
+  font-family:'Crimson Pro',serif;font-style:italic;
+  color:rgba(255,255,255,0.45);font-size:0.98rem;margin-top:0.35rem;
+}
+
+/* LAYOUT */
+.app{
+  position:relative;z-index:5;
+  max-width:1300px;margin:0 auto;
+  padding:2rem 1.5rem 4rem;
+  display:grid;
+  grid-template-columns:355px 1fr;
+  gap:2rem;align-items:start;
+}
+@media(max-width:860px){.app{grid-template-columns:1fr;padding:1.5rem 1rem 3rem;}}
+@media(max-width:480px){.app{padding:1rem;gap:1.5rem;}}
+
+/* FORM PANEL */
+.form-panel{
+  background:var(--panel-bg);
+  border:1px solid var(--border);
+  border-radius:3px;
+  backdrop-filter:blur(18px);
+  overflow:hidden;
+  position:sticky;top:1.5rem;
+}
+@media(max-width:860px){.form-panel{position:relative;top:auto;}}
+@media(max-width:480px){.form-panel{border-radius:6px;}}
+.ps{padding:1.35rem 1.5rem;}
+.ps+.ps{border-top:1px solid var(--border);}
+
+.sh{
+  display:flex;align-items:center;gap:8px;
+  font-family:'Oswald',sans-serif;
+  font-size:0.68rem;letter-spacing:0.22em;font-weight:500;
+  text-transform:uppercase;color:var(--gold-bright);
+  margin-bottom:1.15rem;
+}
+.sh svg{flex-shrink:0;opacity:0.9;}
+
+.field{margin-bottom:0.95rem;}
+.field:last-child{margin-bottom:0;}
+label{
+  display:block;
+  font-family:'Oswald',sans-serif;
+  font-size:0.63rem;letter-spacing:0.18em;font-weight:500;
+  text-transform:uppercase;color:rgba(255,255,255,0.38);
+  margin-bottom:0.36rem;
+}
+input[type=text]{
+  width:100%;
+  background:rgba(0,0,0,0.4);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:3px;
+  color:#fff;
+  font-family:'Crimson Pro',serif;font-size:1rem;
+  padding:0.56rem 0.85rem;
+  outline:none;
+  transition:border-color .18s,background .18s;
+}
+input[type=text]::placeholder{color:rgba(255,255,255,0.2);font-style:italic;}
+input[type=text]:focus{border-color:var(--gold-bright);background:rgba(0,0,0,0.58);}
+
+/* UPLOAD */
+.upload-zone{
+  position:relative;
+  border:1.5px dashed rgba(240,180,41,0.32);
+  border-radius:4px;padding:1.35rem 1rem;
+  text-align:center;cursor:pointer;
+  transition:border-color .2s,background .2s;
+  background:rgba(0,0,0,0.18);overflow:hidden;
+}
+.upload-zone:hover{border-color:var(--gold-bright);background:rgba(240,180,41,0.04);}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-icon-ring{
+  width:50px;height:50px;border-radius:50%;
+  background:rgba(240,180,41,0.09);
+  border:1px solid rgba(240,180,41,0.22);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 0.7rem;
+}
+.u-label{font-family:'Oswald',sans-serif;font-size:0.76rem;letter-spacing:0.08em;color:rgba(255,255,255,0.42);}
+.u-hint{font-size:0.7rem;color:rgba(255,255,255,0.22);margin-top:0.28rem;font-style:italic;font-family:'Crimson Pro',serif;}
+.upload-prev{
+  width:70px;height:70px;border-radius:50%;
+  object-fit:cover;border:2.5px solid var(--gold-bright);
+  margin:0 auto 0.55rem;display:block;
+}
+.u-ok{font-family:'Oswald',sans-serif;font-size:0.72rem;letter-spacing:0.1em;color:var(--gold-bright);}
+
+/* FORMAT BTNS */
+.fmt-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem;}
+.fmt{
+  background:rgba(0,0,0,0.32);
+  border:1px solid rgba(255,255,255,0.11);
+  border-radius:3px;
+  color:rgba(255,255,255,0.55);
+  font-family:'Oswald',sans-serif;
+  font-size:0.76rem;letter-spacing:0.13em;font-weight:500;
+  padding:0.52rem 0.3rem;
+  cursor:pointer;transition:all .17s;text-transform:uppercase;text-align:center;
+}
+.fmt:hover,.fmt.active{background:rgba(240,180,41,0.11);border-color:var(--gold-bright);color:var(--gold-bright);}
+
+/* BUTTONS */
+.btn-gen{
+  width:100%;
+  background:linear-gradient(135deg,#b8860c 0%,#f0b429 52%,#b8860c 100%);
+  background-size:200% 100%;background-position:100% 0;
+  color:#0b1f0b;
+  font-family:'Oswald',sans-serif;font-size:0.86rem;font-weight:700;
+  letter-spacing:0.18em;text-transform:uppercase;
+  border:none;border-radius:3px;padding:0.84rem 1rem;
+  cursor:pointer;transition:background-position .4s,transform .14s,box-shadow .2s;
+  box-shadow:0 3px 18px rgba(200,150,12,0.32);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-gen:hover{background-position:0 0;transform:translateY(-1px);box-shadow:0 5px 24px rgba(200,150,12,0.5);}
+.btn-gen:active{transform:translateY(0);}
+
+.btn-dl{
+  width:100%;
+  background:rgba(0,0,0,0.3);
+  border:1px solid rgba(255,255,255,0.13);
+  border-radius:3px;color:#fff;
+  font-family:'Oswald',sans-serif;font-size:0.8rem;letter-spacing:0.14em;font-weight:500;
+  text-transform:uppercase;padding:0.7rem 1rem;cursor:pointer;
+  transition:all .17s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-dl:hover{background:rgba(240,180,41,0.1);border-color:var(--gold-bright);color:var(--gold-bright);}
+
+.q-note{display:flex;align-items:center;gap:7px;font-family:'Oswald',sans-serif;font-size:0.61rem;letter-spacing:0.12em;color:rgba(255,255,255,0.22);margin-top:0.65rem;text-transform:uppercase;}
+
+/* PREVIEW */
+.prev-hdr{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Oswald',sans-serif;font-size:0.66rem;letter-spacing:0.2em;font-weight:500;
+  text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:1rem;
+}
+.prev-hdr::after{content:'';flex:1;height:1px;background:var(--border);}
+.prev-wrap{
+  border-radius:4px;overflow:hidden;
+  box-shadow:0 14px 70px rgba(0,0,0,0.72),0 0 0 1px var(--border);
+  background:#0b1f0b;min-height:620px;
+  display:flex;align-items:center;justify-content:center;
+}
+.prev-wrap canvas{width:100%;height:auto;display:block;}
+.empty{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:1.1rem;padding:3.5rem 2rem;
+  color:rgba(255,255,255,0.18);text-align:center;
+}
+.empty svg{opacity:0.18;}
+.empty p{font-family:'Oswald',sans-serif;font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;line-height:1.8;}
+.empty strong{color:var(--gold-bright);}
+hr.divider{border:none;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+
+<!-- ─── INLINE SVG ICON DEFS ─── -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+  </symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+    <circle cx="12" cy="13" r="3"/>
+  </symbol>
+  <symbol id="i-wand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m15 4-1 1M4 15l1-1m7-9 6 6-8 8-6-6 8-8zm5-3-1 1M4 4l1 1m15 15-1-1"/>
+  </symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+  </symbol>
+  <symbol id="i-image" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+  </symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+  </symbol>
+  <symbol id="i-tent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3.5 21 12 3l8.5 18"/><path d="M8 21l4-8 4 8"/><line x1="3.5" y1="21" x2="20.5" y2="21"/>
+  </symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="20 6 9 17 4 12"/>
+  </symbol>
+</svg>
+
+<header class="site-header">
+  <div class="eyebrow">
+    <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    Eastern Malawi Conference &nbsp;&middot;&nbsp; Adventist Youth Ministries
+    <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+  </div>
+  <h1>1<sup style="font-size:.44em;vertical-align:super;font-weight:700">st</sup> Pathfinder <em>Camporee</em></h1>
+  <p>Mlangeni Campsite, Mangochi &mdash; 16&ndash;22 August 2026</p>
+</header>
+
+<main class="app">
+
+  <!-- ─── FORM ─── -->
+  <aside class="form-panel">
+
+    <div class="ps">
+      <div class="sh">
+        <svg width="13" height="13"><use href="#i-user"/></svg>
+        Personal Details
+      </div>
+      <div class="field">
+        <label>Club Name</label>
+        <input type="text" id="clubName" placeholder="e.g. Nansalele Pathfinder Club">
+      </div>
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="fullName" placeholder="e.g. Gerald Kachokola">
+      </div>
+      <div class="field">
+        <label>Role / Title <span style="opacity:.45;font-style:italic;text-transform:none;letter-spacing:0">(optional)</span></label>
+        <input type="text" id="role" placeholder="e.g. Pathfinder, Director, Counselor">
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="ps">
+      <div class="sh">
+        <svg width="13" height="13"><use href="#i-camera"/></svg>
+        Your Photo
+      </div>
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="photoInput" accept="image/*" onchange="handlePhoto(event)">
+        <div id="uploadInner">
+          <div class="upload-icon-ring">
+            <svg width="21" height="21" color="#f0b429"><use href="#i-camera"/></svg>
+          </div>
+          <div class="u-label">Click to upload your photo</div>
+          <div class="u-hint">JPG &nbsp;&middot;&nbsp; PNG &nbsp;&middot;&nbsp; WEBP</div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="ps">
+      <div class="sh">
+        <svg width="13" height="13"><use href="#i-wand"/></svg>
+        Generate
+      </div>
+      <button class="btn-gen" onclick="generateFlyer()">
+        <svg width="15" height="15"><use href="#i-wand"/></svg>
+        Generate My Flyer
+      </button>
+    </div>
+
+    <hr class="divider">
+
+    <div class="ps">
+      <div class="sh">
+        <svg width="13" height="13"><use href="#i-download"/></svg>
+        Download
+      </div>
+      <div class="fmt-row">
+        <button class="fmt active" onclick="setFmt(this,'png')">PNG</button>
+        <button class="fmt" onclick="setFmt(this,'jpeg')">JPEG</button>
+        <button class="fmt" onclick="setFmt(this,'webp')">WEBP</button>
+      </div>
+      <button class="btn-dl" onclick="downloadFlyer()">
+        <svg width="14" height="14"><use href="#i-download"/></svg>
+        Download Flyer
+      </button>
+      <div class="q-note">
+        <svg width="11" height="11"><use href="#i-shield"/></svg>
+        4K Portrait &nbsp;&middot;&nbsp; 2658 &times; 3840 px
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ─── PREVIEW ─── -->
+  <section>
+    <div class="prev-hdr">
+      <svg width="12" height="12"><use href="#i-image"/></svg>
+      Flyer Preview
+    </div>
+    <div class="prev-wrap" id="prevWrap">
+      <div class="empty" id="emptyState">
+        <svg width="52" height="52"><use href="#i-tent"/></svg>
+        <p>Fill in your details and click<br><strong>Generate My Flyer</strong><br>to preview your personalised flyer.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<canvas id="masterCvs" style="display:none"></canvas>
+
+<script>
+/* ── STATE ── */
+let photo = null, ready = false, dlFmt = 'png';
+const headerLogoSources = [
+  'assets/adventurer_World_Logo.png',
+  'assets/Pathfinder_world_logo.png',
+  'assets/Ambassador_logo.png',
+  'assets/AY_Logo.webp',
+  'assets/PCM_1i1.webp',
+  'assets/adventist-symbol-circle--denim.png'
+];
+const headerLogos = headerLogoSources.map(src => {
+  const img = new Image();
+  img.src = src;
+  return img;
+});
+
+function setFmt(btn, f) {
+  dlFmt = f;
+  document.querySelectorAll('.fmt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function headerLogosReady() {
+  return headerLogos.every(img => img.complete && img.naturalWidth > 0);
+}
+
+
+function handlePhoto(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      photo = img;
+      document.getElementById('uploadInner').innerHTML = `
+        <img src="${ev.target.result}" class="upload-prev" alt="">
+        <div class="u-ok">
+          <svg width="12" height="12" style="vertical-align:-1px" color="var(--gold-bright)"><use href="#i-check"/></svg>
+          Photo ready &mdash; click Generate
+        </div>`;
+    };
+    img.src = ev.target.result;
+  };
+  r.readAsDataURL(file);
+}
+
+/* ── DRAW HELPERS ── */
+const rr = (ctx, x, y, w, h, r) => {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+};
+
+const circ = (ctx, cx, cy, r) => { ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.closePath(); };
+
+function starPath(ctx, cx, cy, pts, ro, ri) {
+  let a = -Math.PI/2;
+  const s = Math.PI/pts;
+  ctx.beginPath();
+  for (let i=0;i<pts*2;i++) {
+    const rad = i%2===0?ro:ri;
+    ctx.lineTo(cx+Math.cos(a)*rad, cy+Math.sin(a)*rad);
+    a+=s;
+  }
+  ctx.closePath();
+}
+
+function flamePath(ctx, cx, cy, w, h) {
+  ctx.beginPath();
+  ctx.moveTo(cx, cy+h);
+  ctx.bezierCurveTo(cx-w*1.05,cy+h*.7, cx-w*.85,cy+h*.15, cx-w*.05,cy);
+  ctx.bezierCurveTo(cx+w*.25,cy+h*.2, cx+w*.45,cy+h*.05, cx+w*.32,cy-h*.12);
+  ctx.bezierCurveTo(cx+w*.85,cy+h*.28, cx+w*1.0,cy+h*.7, cx,cy+h);
+  ctx.closePath();
+}
+
+function drawTree(ctx, x, y, h, col) {
+  const w = h*.52;
+  ctx.fillStyle = col;
+  ctx.fillRect(x-5, y, 10, 22);
+  for (let i=0;i<3;i++) {
+    const lw=w*(1-i*.28), lh=h*(.46-i*.08), ly=y-h*.28-i*h*.22;
+    const shade = `hsl(120,${45-i*5}%,${20+i*4}%)`;
+    ctx.fillStyle = shade;
+    ctx.beginPath(); ctx.moveTo(x,ly-lh); ctx.lineTo(x-lw,ly); ctx.lineTo(x+lw,ly); ctx.closePath(); ctx.fill();
+  }
+}
+
+function drawTent(ctx, x, y, sz, body, door) {
+  ctx.fillStyle='rgba(0,0,0,0.22)';
+  ctx.beginPath(); ctx.ellipse(x,y+6,sz*.8,sz*.16,0,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle=body;
+  ctx.beginPath(); ctx.moveTo(x-sz,y); ctx.lineTo(x,y-sz*1.15); ctx.lineTo(x+sz,y); ctx.closePath(); ctx.fill();
+  ctx.fillStyle=door;
+  ctx.beginPath(); ctx.moveTo(x-sz*.23,y); ctx.lineTo(x,y-sz*.67); ctx.lineTo(x+sz*.23,y); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.22)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(x-sz,y); ctx.lineTo(x,y-sz*1.15); ctx.lineTo(x+sz,y); ctx.stroke();
+}
+
+function arcText(ctx, text, cx, cy, r, startAngle) {
+  ctx.save();
+  const step = (2*Math.PI)/text.length;
+  ctx.translate(cx,cy);
+  let angle = startAngle;
+  for (let i=0;i<text.length;i++) {
+    ctx.save(); ctx.rotate(angle); ctx.translate(0,-r); ctx.fillText(text[i],0,0); ctx.restore();
+    angle+=step;
+  }
+  ctx.restore();
+}
+
+/* ── MAIN RENDER ── */
+async function generateFlyer() {
+  const clubName = (document.getElementById('clubName').value.trim()||'My Pathfinder Club').toUpperCase();
+  const fullName = document.getElementById('fullName').value.trim()||'Your Name';
+  const role = document.getElementById('role').value.trim();
+
+  const BASE_W = 900;
+  const BASE_H = 1300;
+  const SCALE = 3840 / BASE_H;
+  const W = BASE_W;
+  const H = BASE_H;
+  const cvs = document.getElementById('masterCvs');
+  cvs.width = Math.round(BASE_W * SCALE);
+  cvs.height = Math.round(BASE_H * SCALE);
+  const c = cvs.getContext('2d');
+  c.setTransform(SCALE, 0, 0, SCALE, 0, 0);
+  let g;
+
+  /* ─ SKY ─ */
+  g = c.createLinearGradient(0,0,0,H*.46);
+  g.addColorStop(0,'#1e5f96'); g.addColorStop(.5,'#4d96c8'); g.addColorStop(1,'#a8d8f2');
+  c.fillStyle=g; c.fillRect(0,0,W,H);
+
+  /* clouds */
+  function cloud(x,y,sc) {
+    c.fillStyle='rgba(255,255,255,0.52)';
+    [[0,0,36],[28,-9,26],[52,1,32],[-22,3,24],[20,11,18]].forEach(([dx,dy,r])=>{
+      c.beginPath(); c.arc(x+dx*sc,y+dy*sc,r*sc,0,Math.PI*2); c.fill();
+    });
+  }
+  cloud(95,52,.88); cloud(310,36,.68); cloud(638,58,1.08); cloud(810,40,.6);
+
+  /* ─ GROUND ─ */
+  g = c.createLinearGradient(0,H*.42,0,H);
+  g.addColorStop(0,'#2c6820'); g.addColorStop(.12,'#215016'); g.addColorStop(.45,'#163a0f'); g.addColorStop(1,'#0a1a0a');
+  c.fillStyle=g; c.fillRect(0,H*.42,W,H);
+
+  /* ─ HILLS ─ */
+  function hill(col, pts) {
+    c.fillStyle=col; c.beginPath(); c.moveTo(pts[0][0],pts[0][1]*H);
+    for(let i=1;i<pts.length;i++) c.lineTo(pts[i][0],pts[i][1]*H);
+    c.closePath(); c.fill();
+  }
+  hill('#387825',[[0,.52],[W*.18,.43],[W*.50,.49],[W*.72,.43],[W,.50],[W,.58],[0,.58]]);
+  hill('#2c6220',[[0,.55],[W*.26,.47],[W*.55,.52],[W*.80,.46],[W,.54],[W,.62],[0,.62]]);
+
+  /* ─ TREES ─ */
+  [[62,H*.535,112,'#174d17'],[128,H*.515,138,'#1c5c1c'],[192,H*.540,88,'#163d16'],
+   [W-62,H*.535,118,'#174d17'],[W-136,H*.510,146,'#1c5c1c'],[W-210,H*.538,92,'#163d16'],
+   [W-288,H*.554,68,'#163d16'],[255,H*.553,62,'#163d16']].forEach(([x,y,h,col])=>drawTree(c,x,y,h,col));
+
+  /* ─ TENTS ─ */
+  drawTent(c,172,H*.624,78,'#c87a08','#6e3304');
+  drawTent(c,W-198,H*.616,92,'#1762a0','#0d3d70');
+  drawTent(c,W-322,H*.630,62,'#1e8040','#115226');
+
+  /* lantern */
+  c.fillStyle='rgba(240,180,41,0.25)'; circ(c,108,H*.637,18); c.fill();
+  c.fillStyle='#f0b429'; circ(c,108,H*.637,9); c.fill();
+  c.strokeStyle='#c8960c'; c.lineWidth=1.5; c.stroke();
+
+  /* bedroll */
+  c.fillStyle='#1a5a8a'; c.beginPath(); c.ellipse(100,H*.639,30,10,-0.3,0,Math.PI*2); c.fill();
+  c.strokeStyle='#0d3d6e'; c.lineWidth=1; c.stroke();
+
+  /* backpack */
+  c.fillStyle='#6b3a1f'; rr(c,W-145,H*.621,28,40,5); c.fill();
+  c.fillStyle='#3e1d0a'; c.fillRect(W-140,H*.621,18,5);
+
+  /* ─ CAMPFIRE ─ */
+  const fx=W/2, fy=H*.628;
+  c.strokeStyle='#3e1a08'; c.lineWidth=13; c.lineCap='round';
+  c.beginPath(); c.moveTo(fx-55,fy+22); c.lineTo(fx+28,fy-2); c.stroke();
+  c.beginPath(); c.moveTo(fx+55,fy+22); c.lineTo(fx-28,fy-2); c.stroke();
+  c.strokeStyle='#5c3317'; c.lineWidth=10;
+  c.beginPath(); c.moveTo(fx-55,fy+22); c.lineTo(fx+28,fy-2); c.stroke();
+  c.beginPath(); c.moveTo(fx+55,fy+22); c.lineTo(fx-28,fy-2); c.stroke();
+  [[-30,22],[30,22],[0,26],[-50,24],[50,24],[-18,27],[18,27]].forEach(([dx,dy])=>{
+    c.fillStyle='#7a7a7a'; c.beginPath(); c.ellipse(fx+dx,fy+dy,9,5.5,0,0,Math.PI*2); c.fill();
+    c.fillStyle='#999'; c.beginPath(); c.ellipse(fx+dx-2,fy+dy-2,4.5,2.5,0,0,Math.PI*2); c.fill();
+  });
+  [['rgba(160,20,20,.55)',0,0,15,44],['#b91c1c',-9,6,12,36],['#e05d0a',9,5,11,30],
+   ['#e67e22',-1,2,13,38],['#f39c12',0,8,10,26],['#f1c40f',-2,14,7,16],['rgba(255,250,200,.85)',1,19,4,9]
+  ].forEach(([col,dx,dy,fw,fh])=>{ c.fillStyle=col; flamePath(c,fx+dx,fy-6+dy,fw,fh); c.fill(); });
+
+  /* ─ HEADER BAND ─ */
+  c.fillStyle='#ffffff'; c.fillRect(0,0,W,148);
+  c.fillStyle='#0f1f3d'; c.fillRect(0,0,W,5);
+  c.fillStyle='#b91c1c'; c.fillRect(0,145,W,3);
+
+  c.textAlign='center';
+  if (!headerLogosReady()) {
+    headerLogos.forEach(img => { if (!img.complete || !img.naturalWidth) img.onload = generateFlyer; });
+    return;
+  }
+
+  const logoY = 11;
+  const logoBoxH = 32;
+  const gap = 6;
+  const sidePad = 34;
+  const totalGap = gap * (headerLogos.length - 1);
+  const maxRowW = W - sidePad * 2 - totalGap;
+  const targetWidths = [34, 34, 34, 30, 30, 30];
+  const widths = headerLogos.map((img, idx) => {
+    const aspect = img.naturalWidth / img.naturalHeight;
+    const ideal = targetWidths[idx] || 90;
+    const h = Math.min(logoBoxH, ideal / aspect);
+    const w = Math.min(ideal, maxRowW / headerLogos.length);
+    return { w: Math.max(26, Math.min(w, h * aspect)), h: Math.max(24, Math.min(logoBoxH, w / aspect)) };
+  });
+  const rowW = widths.reduce((sum, item) => sum + item.w, 0) + totalGap;
+  let x = (W - rowW) / 2;
+
+  headerLogos.forEach((img, idx) => {
+    const { w, h } = widths[idx];
+    const y = logoY + (logoBoxH - h) / 2;
+    try { c.drawImage(img, x, y, w, h); } catch (e) { /* fail silently */ }
+    x += w + gap;
+  });
+
+  // Conference title below the logo row
+  c.fillStyle='#0f1f3d'; c.font='700 18px Oswald,sans-serif';
+  c.fillText('EASTERN MALAWI CONFERENCE', W/2, 76);
+  c.fillStyle='#b91c1c'; c.font='600 13px Oswald,sans-serif';
+  c.fillText('ADVENTIST YOUTH MINISTRIES', W/2, 96);
+
+  /* ─ MAIN TITLE ─ */
+  const TY=132;
+  const centerX = W/2;
+
+  // Draw main centered words first so we can measure and place '1' and 'ST' nearby
+  c.textAlign='center';
+  c.font='900 100px "Barlow Condensed",sans-serif'; c.fillStyle='#b91c1c';
+  c.fillText('PATHFINDER',centerX,TY+90);
+  c.strokeStyle='#6a0808'; c.lineWidth=1.8; c.strokeText('PATHFINDER',centerX,TY+90);
+
+  c.font='900 86px "Barlow Condensed",sans-serif'; c.fillStyle='#0f1f3d';
+  c.fillText('CAMPOREE',centerX,TY+162);
+  c.font='700 25px "Barlow Condensed",sans-serif'; c.fillStyle='#0f1f3d';
+  c.fillText('MLANGENI CAMPSITE — MANGOCHI',centerX,TY+192);
+
+  // Measure to place '1' and 'ST' to the left of PATHFINDER with a small gap
+  c.font='900 100px "Barlow Condensed",sans-serif';
+  const pathW = c.measureText('PATHFINDER').width;
+  const leftOfPath = centerX - pathW/2;
+
+  c.textAlign='left';
+  c.fillStyle='#b91c1c';
+  // position ST slightly left of PATHFINDER with a clear gap
+  c.font='700 46px "Barlow Condensed",sans-serif';
+  const stW = c.measureText('ST').width;
+  const stX = leftOfPath - stW - 18; // gap of 18px from PATHFINDER
+  const stY = TY+92; // align ST near PATHFINDER baseline
+  c.fillText('ST', stX, stY);
+
+  // position the '1' to the left of ST
+  c.font='900 106px "Barlow Condensed",sans-serif';
+  const oneW = c.measureText('1').width;
+  const oneX = stX - oneW - 8;
+  const oneY = TY+96;
+  c.fillText('1', oneX, oneY);
+
+  /* Badge removed to simplify layout - content flows upward */
+
+  /* ─ PHOTO ─ */
+  const pX=W/2, pY=H*.48, pR=180;
+
+  c.strokeStyle='#0f1f3d'; c.lineWidth=11; circ(c,pX,pY,pR+22); c.stroke();
+  c.strokeStyle='#b91c1c'; c.lineWidth=5; circ(c,pX,pY,pR+16); c.stroke();
+  c.strokeStyle='#f0b429'; c.lineWidth=6.5; circ(c,pX,pY,pR+10); c.stroke();
+
+  for (let i=0;i<10;i++) {
+    const a=(i/10)*Math.PI*2-Math.PI/10;
+    const sx=pX+Math.cos(a)*(pR+35), sy=pY+Math.sin(a)*(pR+35);
+    starPath(c,sx,sy,5,5.5,2.2);
+    c.fillStyle=i%2===0?'#f0b429':'#b91c1c'; c.fill();
+  }
+
+  c.save(); circ(c,pX,pY,pR); c.clip();
+  if (photo) {
+    const ar=photo.width/photo.height;
+    let sw=pR*2, sh=pR*2;
+    ar>1?sw=sh*ar:sh=sw/ar;
+    c.drawImage(photo,pX-sw/2,pY-sh/2,sw,sh);
+  } else {
+    g = c.createLinearGradient(pX-pR,pY-pR,pX+pR,pY+pR);
+    g.addColorStop(0,'#1e5a1e'); g.addColorStop(1,'#0a1a0a');
+    c.fillStyle=g; c.fillRect(pX-pR,pY-pR,pR*2,pR*2);
+    /* silhouette */
+    c.fillStyle='rgba(255,255,255,0.14)';
+    c.beginPath(); c.arc(pX,pY-18,26,0,Math.PI*2); c.fill();
+    c.beginPath();
+    c.moveTo(pX-pR,pY+pR); c.quadraticCurveTo(pX-pR,pY+18,pX,pY+10); c.quadraticCurveTo(pX+pR,pY+18,pX+pR,pY+pR);
+    c.closePath(); c.fill();
+  }
+  c.restore();
+
+  /* ─ PERSONALISED TEXT ─ */
+  let ty = pY+pR+26;
+  c.textAlign='center';
+
+  /* club pill (highlighted) */
+  const pw=Math.min(W-80,700), px2=W/2-pw/2;
+  // gold filled pill with rounded corners
+  c.save();
+  c.fillStyle='#f0b429'; rr(c,px2,ty-30,pw,56,28); c.fill();
+  c.strokeStyle='rgba(0,0,0,0.12)'; c.lineWidth=1; rr(c,px2,ty-30,pw,56,28); c.stroke();
+  // subtle shadow for depth
+  c.shadowColor='rgba(0,0,0,0.35)'; c.shadowBlur=10; c.shadowOffsetY=3;
+  // bold dark text on gold
+  c.fillStyle='#0f1f3d'; c.font='800 28px "Barlow Condensed",sans-serif';
+  while (c.measureText(clubName).width>pw-40) {
+    const sz=parseInt(c.font); c.font=c.font.replace(/\d+px/,(sz-1)+'px');
+  }
+  c.textAlign='center'; c.fillText(clubName,W/2,ty+6);
+  c.restore();
+
+  ty+=56;
+  c.fillStyle='rgba(255,255,255,0.78)'; c.font='italic 400 26px "Crimson Pro",Georgia,serif';
+  c.fillText('I,',W/2,ty);
+
+  ty+=50;
+  c.fillStyle='#f0b429'; c.font='900 54px "Barlow Condensed",sans-serif';
+  const nu=fullName.toUpperCase();
+  while (c.measureText(nu).width>W-60) {
+    const sz=parseInt(c.font); c.font=c.font.replace(/\d+px/,(sz-2)+'px');
+  }
+  c.fillText(nu,W/2,ty);
+  const nw2=c.measureText(nu).width;
+  c.strokeStyle='rgba(240,180,41,0.7)'; c.lineWidth=1.5;
+  c.beginPath(); c.moveTo(W/2-nw2/2-14,ty+6); c.lineTo(W/2+nw2/2+14,ty+6); c.stroke();
+
+  if (role) {
+    ty+=30; c.fillStyle='rgba(255,255,255,0.5)'; c.font='italic 400 20px "Crimson Pro",Georgia,serif';
+    c.fillText(role,W/2,ty);
+  }
+
+  ty+=40;
+  c.fillStyle='rgba(255,255,255,0.82)'; c.font='400 28px "Barlow Condensed",sans-serif';
+  c.fillText('WILL ATTEND THE',W/2,ty);
+
+  ty+=44;
+  c.fillStyle='#ef4444'; c.font='900 42px "Barlow Condensed",sans-serif';
+  c.fillText('1ST PATHFINDER CAMPOREE',W/2,ty);
+
+  ty+=22;
+  c.strokeStyle='rgba(240,180,41,0.28)'; c.lineWidth=1;
+  c.beginPath(); c.moveTo(40,ty); c.lineTo(W-40,ty); c.stroke();
+
+  /* ─ INFO CARDS ─ */
+  ty+=18;
+  const cH=92, cG=14, cW=(W-60-cG*2)/3;
+  [
+    {label:'DATE',    lines:['16 – 22 August','2026']},
+    {label:'VENUE',   lines:['Mlangeni Campsite','Mangochi, Malawi']},
+    {label:'REG FEE', lines:['MK 120,000','per participant']},
+  ].forEach((card,i)=>{
+    const cx3=30+i*(cW+cG);
+    c.fillStyle='rgba(8,18,36,0.98)'; rr(c,cx3,ty,cW,cH,6); c.fill();
+    c.strokeStyle='rgba(240,180,41,0.6)'; c.lineWidth=1.5; rr(c,cx3,ty,cW,cH,6); c.stroke();
+    c.fillStyle='#f0b429'; rr(c,cx3,ty,cW,6,3); c.fill();
+    c.textAlign='left';
+    c.fillStyle='#f0b429'; c.font='700 12px Oswald,sans-serif';
+    c.fillText(card.label,cx3+12,ty+26);
+    c.fillStyle='#ffffff'; c.font='700 17px "Barlow Condensed",sans-serif';
+    card.lines.forEach((l,li)=>c.fillText(l,cx3+12,ty+48+li*22));
+  });
+
+  ty+=cH+18;
+  // Removed bank deposit box and registration deadline banner per request
+  ty+=24; // small spacer before footer
+
+  /* ─ FOOTER ─ */
+  c.fillStyle='#072238'; c.fillRect(0,ty,W,H-ty);
+  c.fillStyle='#f0b429'; c.fillRect(0,ty,W,4);
+
+  ty+=16;
+  for (let i=0;i<9;i++) {
+    starPath(c,78+i*96,ty+12,5,7.5,3);
+    c.fillStyle=i%2===0?'#f0b429':'#b91c1c'; c.fill();
+  }
+
+  ty+=34;
+  c.fillStyle='#f0b429'; c.font='700 16px "Crimson Pro",Georgia,serif';
+  c.textAlign='center';
+  c.fillText('Stand Strong — Daniel 3:17',W/2,ty);
+
+  ty+=22;
+  c.strokeStyle='rgba(240,180,41,0.24)'; c.lineWidth=1.2;
+  c.beginPath(); c.moveTo(80,ty); c.lineTo(W-80,ty); c.stroke();
+  ty+=18;
+  c.fillStyle='rgba(255,255,255,0.42)'; c.font='400 12.5px Oswald,sans-serif';
+  c.fillText('1st Eastern Malawi Conference Pathfinder Camporee  ·  Mlangeni Campsite  ·  August 2026',W/2,ty);
+
+  /* ─ PUSH TO PREVIEW ─ */
+  const wrap = document.getElementById('prevWrap');
+  wrap.innerHTML='';
+  const dc = document.createElement('canvas');
+  dc.width=cvs.width; dc.height=cvs.height; dc.style.cssText='width:100%;height:auto;display:block;';
+  dc.getContext('2d').drawImage(cvs,0,0);
+  wrap.appendChild(dc);
+  ready=true;
+}
+
+function downloadFlyer() {
+  if (!ready) { alert('Please generate your flyer first.'); return; }
+  const cvs = document.getElementById('masterCvs');
+  const mime = {png:'image/png',jpeg:'image/jpeg',webp:'image/webp'};
+  const q = dlFmt==='jpeg'?.95:dlFmt==='webp'?.92:undefined;
+  const a = document.createElement('a');
+  a.download=`pathfinder-camporee-i-will-attend.${dlFmt}`;
+  a.href=cvs.toDataURL(mime[dlFmt],q);
+  a.click();
+}
+
+window.addEventListener('load',()=>setTimeout(generateFlyer,180));
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT')generateFlyer();});
+</script>
+</body>
+</html>
